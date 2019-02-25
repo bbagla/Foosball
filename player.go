@@ -41,12 +41,16 @@ func (p *player) update(){
 	keys := sdl.GetKeyboardState()
 
 	if keys[sdl.SCANCODE_UP]==1{
-		if p.y>=0 && p.y <boxHeight {
+		if p.y>0 {
 			p.y -= playerSpeed
+		}else{
+			p.y=0
 		}
 	}else if keys[sdl.SCANCODE_DOWN] == 1{
-		if p.y>=0 && p.y <boxHeight {
+		if p.y <boxHeight - playerHeight -1{
 			p.y += playerSpeed
+		}else{
+			p.y = boxHeight - playerHeight - 1
 		}
 	}
 }
