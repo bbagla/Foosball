@@ -4,204 +4,121 @@ import (
 	"fmt"
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
+	"math"
 )
 
 const (
-	playerSpeed = 5
-	playerWidth = 20
-	playerHeight = 30
+	playerSpeed   = 5
+	playerWidth   = 25
+	playerHeight  = 30
+	boundarywidth = 29
 )
 
 type team struct {
 	goalKeeper player
-	leftBack player
-	rightBack player
-	centerMid player
-	lmid player
-	llmid player
-	rmid player
-	rrmid player
-	striker player
-	leftWing player
-	rightWing player
+	defence    [2]player
+	mid        [5]player
+	attack     [3]player
 }
 
-type player struct{
-	tex *sdl.Texture
-	x,y float64
+type player struct {
+	tex  *sdl.Texture
+	x, y float64
 }
 
-func newteam(renderer *sdl.Renderer) (p team, err error){
-	p.goalKeeper,err = newplayer(renderer,61-playerWidth/2,boxHeight/2 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
+func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
+	offset := int32(0)
+	if teamid == 2 {
+		offset = boxWidth - 1 - playerWidth
 	}
-
-	p.leftBack,err = newplayer(renderer,136 - playerWidth/2,boxHeight/3 - playerHeight/2)
-	if err!=nil{
+	t.goalKeeper, err = newplayer(renderer, int32(math.Abs(float64(61-playerWidth/2-offset))), boxHeight/2-playerHeight/2, teamid)
+	if err != nil {
 		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
+		return team{}, fmt.Errorf("%v", err)
 	}
-
-	p.rightBack,err = newplayer(renderer,136 - playerWidth/2,boxHeight/1.5 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
+	for i := range t.defence {
+		t.defence[i], err = newplayer(renderer, int32(math.Abs(float64(136-playerWidth/2-offset))), int32(boxHeight*(i+1))/3-playerHeight/2, teamid)
+		if err != nil {
+			fmt.Println(err)
+			return team{}, fmt.Errorf("%v", err)
+		}
 	}
-
-
-	p.llmid,err = newplayer(renderer,286 - playerWidth/2,boxHeight/6 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
+	for i := range t.mid {
+		t.mid[i], err = newplayer(renderer, int32(math.Abs(float64(286-playerWidth/2-offset))), int32(boxHeight*(i+1))/6-playerHeight/2, teamid)
+		if err != nil {
+			fmt.Println(err)
+			return team{}, fmt.Errorf("%v", err)
+		}
 	}
-
-	p.lmid,err = newplayer(renderer,286 - playerWidth/2,boxHeight/3 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
+	for i := range t.attack {
+		t.attack[i], err = newplayer(renderer, int32(math.Abs(float64(436-playerWidth/2-offset))), int32(boxHeight*(i+1))/4-playerHeight/2, teamid)
+		if err != nil {
+			fmt.Println(err)
+			return team{}, fmt.Errorf("%v", err)
+		}
 	}
-
-	p.centerMid,err = newplayer(renderer,286 - playerWidth/2,boxHeight/2 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-
-	p.rmid,err = newplayer(renderer,286 - playerWidth/2,(boxHeight*2)/3 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-
-	p.rrmid,err = newplayer(renderer,286 - playerWidth/2,(boxHeight*5)/6 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-
-	p.leftWing,err = newplayer(renderer,436 - playerWidth/2,boxHeight/4 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-
-	p.striker,err = newplayer(renderer,436 - playerWidth/2,boxHeight/2 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-
-
-	p.rightWing,err = newplayer(renderer,436 - playerWidth/2,(boxHeight*3)/4 - playerHeight/2)
-	if err!=nil{
-		fmt.Println(err)
-		return team{},fmt.Errorf("%v",err)
-	}
-	return p,nil
+	return t, nil
 }
 
-
-func newplayer(renderer *sdl.Renderer,x,y int32) (p player, err error){
+func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error) {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
-		playerImg,err:= img.Load("/home/bhavya/go/src/sdl/Player_Red.png")
-		if err!=nil{
-			fmt.Println(err)
-			return player{},fmt.Errorf("%v",err)
-		}
-		defer playerImg.Free()
-		p.tex,err = renderer.CreateTextureFromSurface(playerImg)
-		if err!=nil{
-			fmt.Println(err)
-			return player{},fmt.Errorf("%v",err)
-		}
+	playerImg, err := img.Load("Player_Red.png")
+	if teamid == 2 {
+		playerImg, err = img.Load("Player_Blue.png")
+	}
+	if err != nil {
+		fmt.Println(err)
+		return player{}, fmt.Errorf("%v", err)
+	}
+	defer playerImg.Free()
+	p.tex, err = renderer.CreateTextureFromSurface(playerImg)
+	if err != nil {
+		fmt.Println(err)
+		return player{}, fmt.Errorf("%v", err)
+	}
 
-		p.x=float64(x)
-		p.y=float64(y)
+	p.x = float64(x)
+	p.y = float64(y)
 
-		return  p, nil
+	return p, nil
 }
 
-func  playerDraw (p *player,renderer *sdl.Renderer,x,y int32) (*sdl.Renderer){
+func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(p.tex,
-		&sdl.Rect{0,0,25,30},
-		&sdl.Rect{int32(p.x),int32(p.y),playerWidth,playerHeight})
+		&sdl.Rect{0, 0, playerWidth, playerHeight},
+		&sdl.Rect{int32(p.x), int32(p.y), playerWidth, playerHeight})
 	return renderer
 }
 
-func (p *team) draw (renderer *sdl.Renderer){
-	playerDraw(&p.goalKeeper,renderer,int32(p.goalKeeper.x),int32(p.goalKeeper.y))
-	playerDraw(&p.leftBack,renderer,int32(p.leftBack.x),int32(p.leftBack.y))
-	playerDraw(&p.rightBack,renderer,int32(p.rightBack.x),int32(p.rightBack.y))
-	playerDraw(&p.centerMid,renderer,int32(p.centerMid.x),int32(p.centerMid.y))
-	playerDraw(&p.rmid,renderer,int32(p.rmid.x),int32(p.rmid.y))
-	playerDraw(&p.rrmid,renderer,int32(p.rrmid.x),int32(p.rrmid.y))
-	playerDraw(&p.lmid,renderer,int32(p.lmid.x),int32(p.lmid.y))
-	playerDraw(&p.llmid,renderer,int32(p.llmid.x),int32(p.llmid.y))
-	playerDraw(&p.striker,renderer,int32(p.striker.x),int32(p.striker.y))
-	playerDraw(&p.leftWing,renderer,int32(p.leftWing.x),int32(p.leftWing.y))
-	playerDraw(&p.rightWing,renderer,int32(p.rightWing.x),int32(p.rightWing.y))
-}
-
-func (p *team) update(){
-	keys := sdl.GetKeyboardState()
-
-	if keys[sdl.SCANCODE_UP]==1{
-		if p.rmid.y>0 {
-			p.rmid.y -= playerSpeed
-		}else{
-			p.rmid.y=0
-		}
-	}else if keys[sdl.SCANCODE_DOWN] == 1{
-		if p.rmid.y <boxHeight - playerHeight -1{
-			p.rmid.y += playerSpeed
-		}else{
-			p.rmid.y = boxHeight - playerHeight - 1
-		}
+func (t *team) draw(renderer *sdl.Renderer) {
+	playerDraw(&t.goalKeeper, renderer)
+	for i := range t.defence {
+		playerDraw(&t.defence[i], renderer)
+	}
+	for i := range t.mid {
+		playerDraw(&t.mid[i], renderer)
+	}
+	for i := range t.attack {
+		playerDraw(&t.attack[i], renderer)
 	}
 }
 
+func (t *team) update() {
+	keys := sdl.GetKeyboardState()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	if keys[sdl.SCANCODE_UP] == 1 {
+		if t.goalKeeper.y > boundarywidth {
+			t.goalKeeper.y -= playerSpeed
+		} else {
+			t.goalKeeper.y = boundarywidth
+		}
+	} else if keys[sdl.SCANCODE_DOWN] == 1 {
+		if t.goalKeeper.y < boxHeight-playerHeight-boundarywidth-1 {
+			t.goalKeeper.y += playerSpeed
+		} else {
+			t.goalKeeper.y = boxHeight - playerHeight - boundarywidth - 1
+		}
+	}
+}
