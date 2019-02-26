@@ -37,6 +37,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	var last_stick = team1.mid[0:5]
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -47,8 +48,8 @@ func main() {
 		renderer.Copy(tableTex, nil, nil)
 		team1.draw(renderer)
 		team2.draw(renderer)
-		team1.update()
-		team2.update()
+		last_stick = team1.update(last_stick)
+		//team2.update()
 		renderer.Present()
 		sdl.Delay(16)
 	}
