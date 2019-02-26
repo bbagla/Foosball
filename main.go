@@ -37,6 +37,12 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	ball, err := newBall(renderer, boxWidth/2-radius, boxHeight/2-radius)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -47,6 +53,8 @@ func main() {
 		renderer.Copy(tableTex, nil, nil)
 		team1.draw(renderer)
 		team2.draw(renderer)
+		ball.draw(renderer)
+		//ball.update()
 		team1.update()
 		team2.update()
 		renderer.Present()
