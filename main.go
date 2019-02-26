@@ -5,12 +5,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-
-
-
-
 func main() {
-	fmt.Println("it is")
 	if err:=sdl.Init(sdl.INIT_EVERYTHING);err!=nil {
 		fmt.Println(err)
 		return
@@ -33,7 +28,7 @@ func main() {
 	defer tableTex.Destroy()
 
 
-	player1,err:= newplayer(renderer)
+	team1,err:= newteam(renderer)
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -46,9 +41,8 @@ func main() {
 			}
 		}
 		renderer.Copy(tableTex,nil,nil)
-		//renderer.Copy(ballTex,&sdl.Rect{X: 0, Y:0 ,W:800 , H:600 },&sdl.Rect{X: 200, Y:200 ,W:10, H:20 })
-		player1.draw(renderer)
-		player1.update()
+		team1.draw(renderer)
+		team1.update()
 		renderer.Present()
 		sdl.Delay(16)
 	}

@@ -6,14 +6,15 @@ import (
 )
 
 const(
-	boxWidth = 800
-	boxHeight = 600
+	boxWidth = 648
+	boxHeight = 498
 )
 func drawBackground(tableTex *sdl.Texture,renderer *sdl.Renderer) *sdl.Texture{
 	backImg,err:= sdl.LoadBMP("/home/bhavya/go/src/sdl/table.bmp")
 	if err!=nil{
 		fmt.Println(err)
 	}
+	defer backImg.Free()
 	tableTex,err = renderer.CreateTextureFromSurface(backImg)
 	if err!=nil{
 		fmt.Println(err)
