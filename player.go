@@ -15,7 +15,7 @@ const (
 )
 
 type team struct {
-	goalKeeper player
+	goalKeeper [1]player
 	defence    [2]player
 	mid        [5]player
 	attack     [3]player
@@ -31,7 +31,7 @@ func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	if teamid == 2 {
 		offset = boxWidth - 1 - playerWidth
 	}
-	t.goalKeeper, err = newplayer(renderer, int32(math.Abs(float64(61-playerWidth/2-offset))), boxHeight/2-playerHeight/2, teamid)
+	t.goalKeeper[0], err = newplayer(renderer, int32(math.Abs(float64(61-playerWidth/2-offset))), boxHeight/2-playerHeight/2, teamid)
 	if err != nil {
 		fmt.Println(err)
 		return team{}, fmt.Errorf("%v", err)
@@ -93,7 +93,7 @@ func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 }
 
 func (t *team) draw(renderer *sdl.Renderer) {
-	playerDraw(&t.goalKeeper, renderer)
+	playerDraw(&t.goalKeeper[0], renderer)
 	for i := range t.defence {
 		playerDraw(&t.defence[i], renderer)
 	}
@@ -105,20 +105,41 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update() {
+func (t *team) update(last_stick []player) []player {
 	keys := sdl.GetKeyboardState()
-
+	//var last_stick []player = t.mid[0:5]
+	var stick1 = t.goalKeeper[0:1]
+	var stick2 []player = t.defence[0:2]
+	var stick3 []player = t.mid[0:5]
+	var stick4 []player = t.attack[0:3]
+	if keys[sdl.SCANCODE_A] == 1 {
+		last_stick = stick1
+	} else if keys[sdl.SCANCODE_S] == 1 {
+		last_stick = stick2
+		fmt.Println(len(last_stick))
+	} else if keys[sdl.SCANCODE_D] == 1 {
+		last_stick = stick3
+		fmt.Println(len(last_stick))
+	} else if keys[sdl.SCANCODE_F] == 1 {
+		last_stick = stick4
+		fmt.Println(len(last_stick))
+	}
 	if keys[sdl.SCANCODE_UP] == 1 {
-		if t.goalKeeper.y > boundarywidth {
-			t.goalKeeper.y -= playerSpeed
-		} else {
-			t.goalKeeper.y = boundarywidth
+		if last_stick[0].y > boundarywidth {
+			for i := range last_stick {
+				if last_stick[i].y > boundarywidth {
+					last_stick[i].y -= playerSpeed
+				}
+			}
 		}
 	} else if keys[sdl.SCANCODE_DOWN] == 1 {
-		if t.goalKeeper.y < boxHeight-playerHeight-boundarywidth-1 {
-			t.goalKeeper.y += playerSpeed
-		} else {
-			t.goalKeeper.y = boxHeight - playerHeight - boundarywidth - 1
+		if last_stick[len(last_stick)-1].y < boxHeight-boundarywidth-playerHeight-1 {
+			for i := range last_stick {
+				if last_stick[i].y < boxHeight-playerHeight-boundarywidth-1 {
+					last_stick[i].y += playerSpeed
+				}
+			}
 		}
 	}
+	return last_stick
 }
