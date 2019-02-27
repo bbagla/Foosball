@@ -116,13 +116,13 @@ func (t *team) update(last_stick []player) []player {
 		last_stick = stick1
 	} else if keys[sdl.SCANCODE_S] == 1 {
 		last_stick = stick2
-		fmt.Println(len(last_stick))
+		//fmt.Println(len(last_stick))
 	} else if keys[sdl.SCANCODE_D] == 1 {
 		last_stick = stick3
-		fmt.Println(len(last_stick))
+		//fmt.Println(len(last_stick))
 	} else if keys[sdl.SCANCODE_F] == 1 {
 		last_stick = stick4
-		fmt.Println(len(last_stick))
+		//fmt.Println(len(last_stick))
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
 		if last_stick[0].y > boundarywidth {
