@@ -9,6 +9,12 @@ type circle struct {
 	x, y, radius float64
 }
 
+var gameStatus = GameStatus{
+	Teams: make([]team, 2),
+	Ball:  Position{},
+	Score: make([]int, 2),
+}
+
 func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println(err)
