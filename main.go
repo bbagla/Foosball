@@ -41,7 +41,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	ball, err := newBall(renderer, boxWidth/2-radius, boxHeight/2-radius)
+	ball, err := newBall(renderer, boxWidth/2, boxHeight/2)
 	if err != nil {
 		fmt.Println(err)
 		return

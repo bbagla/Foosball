@@ -7,7 +7,9 @@ import (
 )
 
 const (
-	radius = 8
+	radius     = 8
+	BallSpeedX = 3
+	BallSpeedY = 1
 )
 
 type ball struct {
@@ -19,7 +21,7 @@ type ball struct {
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(ball.tex,
 		&sdl.Rect{0, 0, 2 * radius, 2 * radius},
-		&sdl.Rect{int32(ball.x), int32(ball.y), 2 * radius, 2 * radius})
+		&sdl.Rect{int32(ball.x - radius), int32(ball.y - radius), 2 * radius, 2 * radius})
 	return renderer
 }
 
@@ -42,19 +44,17 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 	bal.x = float64(x)
 	bal.y = float64(y)
 	bal.radius = radius
-	bal.xv = 3
-	bal.yv = 1
+	bal.xv = BallSpeedX
+	bal.yv = BallSpeedY
 	return bal, nil
 }
 
 func (ball *ball) update() {
-	ball.x += ball.xv
-	ball.y += ball.yv
-
 	goal, index := ball.collidesWall()
 	if index != -1 {
 		onCollisionWithWall(ball, index)
-	} else {
-		fmt.Println(goal)
 	}
+	goal++
+	ball.x += ball.xv
+	ball.y += ball.yv
 }
