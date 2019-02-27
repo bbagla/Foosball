@@ -5,6 +5,10 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+type circle struct {
+	x, y, radius float64
+}
+
 func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println(err)

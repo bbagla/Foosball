@@ -9,7 +9,7 @@ import (
 
 const (
 	playerSpeed   = 5
-	playerWidth   = 25
+	playerWidth   = 26
 	playerHeight  = 30
 	boundarywidth = 29
 )
@@ -22,36 +22,36 @@ type team struct {
 }
 
 type player struct {
-	tex  *sdl.Texture
-	x, y float64
+	circle
+	tex *sdl.Texture
 }
 
 func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	offset := int32(0)
 	if teamid == 2 {
-		offset = boxWidth - 1 - playerWidth
+		offset = boxWidth - 1 - 2*playerWidth
 	}
-	t.goalKeeper[0], err = newplayer(renderer, int32(math.Abs(float64(61-playerWidth/2-offset))), boxHeight/2-playerHeight/2, teamid)
+	t.goalKeeper[0], err = newplayer(renderer, int32(math.Abs(float64(61-playerWidth-offset))), boxHeight/2-playerHeight, teamid)
 	if err != nil {
 		fmt.Println(err)
 		return team{}, fmt.Errorf("%v", err)
 	}
 	for i := range t.defence {
-		t.defence[i], err = newplayer(renderer, int32(math.Abs(float64(136-playerWidth/2-offset))), int32(boxHeight*(i+1))/3-playerHeight/2, teamid)
+		t.defence[i], err = newplayer(renderer, int32(math.Abs(float64(136-playerWidth-offset))), int32(boxHeight*(i+1))/3-playerHeight, teamid)
 		if err != nil {
 			fmt.Println(err)
 			return team{}, fmt.Errorf("%v", err)
 		}
 	}
 	for i := range t.mid {
-		t.mid[i], err = newplayer(renderer, int32(math.Abs(float64(286-playerWidth/2-offset))), int32(boxHeight*(i+1))/6-playerHeight/2, teamid)
+		t.mid[i], err = newplayer(renderer, int32(math.Abs(float64(286-playerWidth-offset))), int32(boxHeight*(i+1))/6-playerHeight, teamid)
 		if err != nil {
 			fmt.Println(err)
 			return team{}, fmt.Errorf("%v", err)
 		}
 	}
 	for i := range t.attack {
-		t.attack[i], err = newplayer(renderer, int32(math.Abs(float64(436-playerWidth/2-offset))), int32(boxHeight*(i+1))/4-playerHeight/2, teamid)
+		t.attack[i], err = newplayer(renderer, int32(math.Abs(float64(436-playerWidth-offset))), int32(boxHeight*(i+1))/4-playerHeight, teamid)
 		if err != nil {
 			fmt.Println(err)
 			return team{}, fmt.Errorf("%v", err)
@@ -79,9 +79,9 @@ func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error)
 		return player{}, fmt.Errorf("%v", err)
 	}
 
-	p.x = float64(x)
-	p.y = float64(y)
-
+	p.x = float64(x + playerWidth/2)
+	p.y = float64(y + playerHeight/2)
+	p.radius = 13
 	return p, nil
 }
 

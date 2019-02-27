@@ -11,8 +11,9 @@ const (
 )
 
 type ball struct {
-	tex          *sdl.Texture
-	x, y, xv, yv float64
+	circle
+	tex    *sdl.Texture
+	xv, yv float64
 }
 
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
@@ -40,6 +41,6 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 
 	bal.x = float64(x)
 	bal.y = float64(y)
-
+	bal.radius = radius
 	return bal, nil
 }
