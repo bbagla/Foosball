@@ -11,8 +11,8 @@ const (
 )
 
 type ball struct {
-	tex                   *sdl.Texture
-	x, y, velocity, theta float64
+	tex          *sdl.Texture
+	x, y, xv, yv float64
 }
 
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
@@ -26,13 +26,13 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
-	playerImg, err := img.Load("Ball.png")
+	BallImg, err := img.Load("Ball.png")
 	if err != nil {
 		fmt.Println(err)
 		return ball{}, fmt.Errorf("%v", err)
 	}
-	defer playerImg.Free()
-	bal.tex, err = renderer.CreateTextureFromSurface(playerImg)
+	defer BallImg.Free()
+	bal.tex, err = renderer.CreateTextureFromSurface(BallImg)
 	if err != nil {
 		fmt.Println(err)
 		return ball{}, fmt.Errorf("%v", err)
