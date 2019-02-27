@@ -42,5 +42,12 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 	bal.x = float64(x)
 	bal.y = float64(y)
 	bal.radius = radius
+	bal.xv = 3
+	bal.yv = 1
 	return bal, nil
+}
+
+func (ball *ball) update() {
+	ball.x += ball.xv
+	ball.y += ball.yv
 }

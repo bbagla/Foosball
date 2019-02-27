@@ -59,7 +59,7 @@ func main() {
 		team1.draw(renderer)
 		team2.draw(renderer)
 		ball.draw(renderer)
-		//ball.update()
+		ball.update()
 		last_stick = team1.update(last_stick)
 		renderer.Present()
 		sdl.Delay(16)
