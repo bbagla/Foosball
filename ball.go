@@ -6,6 +6,8 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+//BallSpeedX : Speed of ball in X-direcrion
+//BallSpeedY : Speed of ball in Y-direcrion
 const (
 	radius     = 8
 	BallSpeedX = 3
