@@ -60,6 +60,8 @@ func main() {
 		team2.draw(renderer)
 		ball.draw(renderer)
 		ball.update()
+		ball.CheckCollision(team1, 1)
+		ball.CheckCollision(team2, 2)
 		last_stick = team1.update(last_stick)
 		renderer.Present()
 		sdl.Delay(16)
