@@ -107,22 +107,18 @@ func (t *team) draw(renderer *sdl.Renderer) {
 
 func (t *team) update(last_stick []player) []player {
 	keys := sdl.GetKeyboardState()
-	//var last_stick []player = t.mid[0:5]
 	var stick1 = t.goalKeeper[0:1]
-	var stick2 []player = t.defence[0:2]
-	var stick3 []player = t.mid[0:5]
-	var stick4 []player = t.attack[0:3]
+	var stick2 = t.defence[0:2]
+	var stick3 = t.mid[0:5]
+	var stick4 = t.attack[0:3]
 	if keys[sdl.SCANCODE_A] == 1 {
 		last_stick = stick1
 	} else if keys[sdl.SCANCODE_S] == 1 {
 		last_stick = stick2
-		//fmt.Println(len(last_stick))
 	} else if keys[sdl.SCANCODE_D] == 1 {
 		last_stick = stick3
-		//fmt.Println(len(last_stick))
 	} else if keys[sdl.SCANCODE_F] == 1 {
 		last_stick = stick4
-		//fmt.Println(len(last_stick))
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
 		if last_stick[0].y > boundarywidth {

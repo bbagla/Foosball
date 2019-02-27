@@ -50,4 +50,11 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 func (ball *ball) update() {
 	ball.x += ball.xv
 	ball.y += ball.yv
+
+	goal, index := ball.collidesWall()
+	if index != -1 {
+		onCollisionWithWall(ball, index)
+	} else {
+		fmt.Println(goal)
+	}
 }
