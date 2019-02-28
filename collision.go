@@ -60,15 +60,22 @@ func onCollisionwithPlayer(ball *ball, teamid int32) {
 }
 
 func (c1 *ball) collidesWall() (goal int, index int) {
+	//index -1 means no collision
+	// 1 means collision with left wall
+	// 2 right wall
+	// 3 upper wall
+	// 4 means lower wall
 	if c1.x < boundarywidth+radius && c1.xv < 0 {
 		if c1.y <= 297 && c1.y >= 201 {
-			return 1, -1
+			insideGoal = true
+			return 2, -1
 		} else {
 			return 0, 1
 		}
 	} else if c1.x > boxWidth-boundarywidth-radius-1 && c1.xv > 0 {
 		if c1.y <= 297 && c1.y >= 201 {
-			return 2, -1
+			insideGoal = true
+			return 1, -1
 		} else {
 			return 0, 2
 		}
@@ -77,7 +84,7 @@ func (c1 *ball) collidesWall() (goal int, index int) {
 	} else if c1.y > boxHeight-boundarywidth-radius-1 && c1.yv > 0 {
 		return 0, 4
 	}
-	return -1, -1
+	return 0, -1
 }
 
 func onCollisionWithWall(ball *ball, index int) {
@@ -89,5 +96,11 @@ func onCollisionWithWall(ball *ball, index int) {
 	if ball.xv > BallSpeedX {
 		ball.xv /= 1.5
 		ball.yv /= 1.5
+	}
+}
+
+func (bal *ball) movementInsidePost() {
+	if bal.y < 201+radius || bal.y > 297-radius {
+		bal.yv = -bal.yv
 	}
 }

@@ -14,6 +14,8 @@ const (
 	BallSpeedY = 1
 )
 
+var insideGoal = false
+
 type ball struct {
 	circle
 	tex    *sdl.Texture
@@ -52,11 +54,30 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 }
 
 func (ball *ball) update() {
-	goal, index := ball.collidesWall()
+	goalId, index := ball.collidesWall()
 	if index != -1 {
 		onCollisionWithWall(ball, index)
 	}
-	goal++
 	ball.x += ball.xv
 	ball.y += ball.yv
+	if insideGoal == true && (ball.x+2*radius < 0 || ball.x > boxWidth-1+2*radius) {
+		ball.reset(goalId)
+		insideGoal = false
+		gameStatus.Score[goalId-1]++
+		fmt.Println(gameStatus.Score[0], ":", gameStatus.Score[1])
+	}
+}
+
+func (ball *ball) reset(goal int) {
+	if goal == 1 || goal == 2 {
+		sdl.Delay(2000)
+		ball.x = float64(boxWidth / 2)
+		ball.y = float64(boxHeight / 2)
+		ball.yv = BallSpeedY
+		if goal == 2 {
+			ball.xv = -BallSpeedX
+		} else if goal == 1 {
+			ball.xv = BallSpeedX
+		}
+	}
 }

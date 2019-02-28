@@ -68,6 +68,9 @@ func main() {
 		ball.update()
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)
+		if insideGoal == true {
+			ball.movementInsidePost()
+		}
 		last_stick = team1.update(last_stick)
 		renderer.Present()
 		sdl.Delay(16)
