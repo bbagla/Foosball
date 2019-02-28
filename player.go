@@ -70,6 +70,7 @@ func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 
 //imports image and attaches it with the player , coordinates are passed into this function for initialization
 func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error) {
+
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
 	playerImg, err := img.Load("Player_Red.png")

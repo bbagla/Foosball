@@ -5,6 +5,7 @@ import (
 	"sort"
 )
 
+//nearestObstacle() returns a integer corresponding to the stick that is nearest to the ball at that moment.
 func (ball *ball) nearestObstacle() int {
 	distance := [8]int32{61, 136, 211, 286, 361, 436, 511, 586}
 
@@ -24,11 +25,14 @@ func (ball *ball) nearestObstacle() int {
 	}
 }
 
+//collides() returns true if the ball collides with a player.
 func (c1 *ball) collides(c2 player) bool {
 	distance := math.Sqrt(math.Pow(c2.x-c1.x+c2.radius, 2) + math.Pow(c2.y-c1.y+c2.radius, 2))
 	return distance <= c1.radius+c2.radius
 }
 
+//CheckCollision() checks at every frame if a collision has happened with a player or not.
+//If a collision has happened, it invokes onCollisionwithPlayer().
 func (ball *ball) CheckCollision(t team, teamid int32) {
 	index := ball.nearestObstacle()
 	arr := [2][]int{{0, 1, 3, 5}, {7, 6, 4, 2}}
@@ -49,6 +53,8 @@ func (ball *ball) CheckCollision(t team, teamid int32) {
 	}
 }
 
+//onCollisionwithPlayer() changes the direction of the ball.
+//It also changes the speed of the ball if it has not been increased by a collision with another player.
 func onCollisionwithPlayer(ball *ball, teamid int32) {
 	if (ball.xv < 0 && teamid == 1) || (ball.xv > 0 && teamid == 2) {
 		ball.xv = -ball.xv
@@ -60,6 +66,8 @@ func onCollisionwithPlayer(ball *ball, teamid int32) {
 	ball.yv += float64(lastMotion) * 0.2
 }
 
+//collidesWall() checks if a collision has happened with a wall or not.
+//It also checks and returns if a goal has happened.
 func (c1 *ball) collidesWall() (goal int, index int) {
 	//index -1 means no collision
 	// 1 means collision with left wall
@@ -88,6 +96,7 @@ func (c1 *ball) collidesWall() (goal int, index int) {
 	return 0, -1
 }
 
+//onCollisionWithWall() changes the direction and speed of the ball.
 func onCollisionWithWall(ball *ball, index int) {
 	if index == 1 || index == 2 {
 		ball.xv = -ball.xv
@@ -100,6 +109,7 @@ func onCollisionWithWall(ball *ball, index int) {
 	}
 }
 
+//movementInsidePost() decides the movement of the ball inside the goal post.
 func (bal *ball) movementInsidePost() {
 	bal.yv = 0
 }
