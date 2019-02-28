@@ -45,7 +45,7 @@ func (ball *ball) CheckCollision(t team, teamid int32) {
 		if j == index {
 			for k := range stick[i] {
 				if ball.collides(stick[i][k]) {
-					onCollisionwithPlayer(ball, teamid)
+					onCollisionwithPlayer(ball, teamid, t.lastMotion)
 					break
 				}
 			}
@@ -55,7 +55,7 @@ func (ball *ball) CheckCollision(t team, teamid int32) {
 
 //onCollisionwithPlayer() changes the direction of the ball.
 //It also changes the speed of the ball if it has not been increased by a collision with another player.
-func onCollisionwithPlayer(ball *ball, teamid int32) {
+func onCollisionwithPlayer(ball *ball, teamid int32, lastMotion int32) {
 	if (ball.xv < 0 && teamid == 1) || (ball.xv > 0 && teamid == 2) {
 		ball.xv = -ball.xv
 	}

@@ -24,6 +24,8 @@ type team struct {
 	defence    [2]player
 	mid        [5]player
 	attack     [3]player
+	lastMotion int32
+	lastStick  []player
 }
 
 //struct for player it contains an imaginary circle for detecting collision which also defines players position
@@ -117,39 +119,40 @@ func (t *team) draw(renderer *sdl.Renderer) {
 }
 
 //updates position of players depending upon the keyboard input
-func (t *team) update(lastStick []player, lastMotion int32) ([]player, int32) {
+func (t *team) update() /*[]player, int32*/ {
 	keys := sdl.GetKeyboardState()
+	t.lastMotion = 0
 	var stick1 = t.goalKeeper[0:1]
 	var stick2 = t.defence[0:2]
 	var stick3 = t.mid[0:5]
 	var stick4 = t.attack[0:3]
 	if keys[sdl.SCANCODE_A] == 1 {
-		lastStick = stick1
+		t.lastStick = stick1
 	} else if keys[sdl.SCANCODE_S] == 1 {
-		lastStick = stick2
+		t.lastStick = stick2
 	} else if keys[sdl.SCANCODE_D] == 1 {
-		lastStick = stick3
+		t.lastStick = stick3
 	} else if keys[sdl.SCANCODE_F] == 1 {
-		lastStick = stick4
+		t.lastStick = stick4
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
-		lastMotion = 1
-		if lastStick[0].y > boundaryWidth {
-			for i := range lastStick {
-				if lastStick[i].y > boundaryWidth {
-					lastStick[i].y -= playerSpeed
+		t.lastMotion = 1
+		if t.lastStick[0].y > boundaryWidth {
+			for i := range t.lastStick {
+				if t.lastStick[i].y > boundaryWidth {
+					t.lastStick[i].y -= playerSpeed
 				}
 			}
 		}
 	} else if keys[sdl.SCANCODE_DOWN] == 1 {
-		lastMotion = -1
-		if lastStick[len(lastStick)-1].y < boxHeight-boundaryWidth-playerHeight-1 {
-			for i := range lastStick {
-				if lastStick[i].y < boxHeight-playerHeight-boundaryWidth-1 {
-					lastStick[i].y += playerSpeed
+		t.lastMotion = -1
+		if t.lastStick[len(t.lastStick)-1].y < boxHeight-boundaryWidth-playerHeight-1 {
+			for i := range t.lastStick {
+				if t.lastStick[i].y < boxHeight-playerHeight-boundaryWidth-1 {
+					t.lastStick[i].y += playerSpeed
 				}
 			}
 		}
 	}
-	return lastStick, lastMotion
+	//return t.lastStick, t.lastMotion
 }

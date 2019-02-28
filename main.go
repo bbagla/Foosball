@@ -19,7 +19,6 @@ var gameStatus = GameStatus{
 
 //last_motion is a variable indicating the key that was pressed last(up/down)
 //It is updated at each frame of the application.
-var lastMotion int32
 
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
@@ -56,18 +55,20 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	team1.lastMotion = 0
+	team1.lastStick = team1.mid[0:5]
 	team2, err := newteam(renderer, 2)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	team2.lastMotion = 0
+	team2.lastStick = team2.mid[0:5]
 	ball, err := newBall(renderer, boxWidth/2, boxHeight/2)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	var lastStick = team1.mid[0:5]
-	lastMotion = 0
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -84,7 +85,7 @@ func main() {
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)
 		ball.update()
-		lastStick, lastMotion = team1.update(lastStick, 0)
+		team1.update()
 		renderer.Copy(scoreUpdate(renderer), nil,
 			&sdl.Rect{120, 0, 400, 25})
 		renderer.Present()
