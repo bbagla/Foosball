@@ -7,13 +7,18 @@ import (
 	"math"
 )
 
+//playerSpeed    : the number of pixels by which player shifts in one key stroke
+//playerWidth    : the width of player in pixels
+//playerHeight   : the height of player in pixels
+//boundaryWidth  : the width of the boundary in pixels
 const (
 	playerSpeed   = 5
 	playerWidth   = 26
 	playerHeight  = 30
-	boundarywidth = 29
+	boundaryWidth = 29
 )
 
+//struct for the teams containing some arrays of players
 type team struct {
 	goalKeeper [1]player
 	defence    [2]player
@@ -21,11 +26,14 @@ type team struct {
 	attack     [3]player
 }
 
+//struct for player it contains an imaginary circle for detecting collision which also defines players position
+//and also texture pointer for drawing the player
 type player struct {
 	circle
 	tex *sdl.Texture
 }
 
+//creates a new team and their coordinates are passed into  it manually
 func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	offset := int32(0)
 	if teamid == 2 {
@@ -60,8 +68,8 @@ func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	return t, nil
 }
 
+//imports image and attaches it with the player , coordinates are passed into this function for initialization
 func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error) {
-
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
 	playerImg, err := img.Load("Player_Red.png")
@@ -85,6 +93,7 @@ func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error)
 	return p, nil
 }
 
+//copies texture from player image to the renderer
 func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(p.tex,
 		&sdl.Rect{0, 0, playerWidth, playerHeight},
@@ -92,6 +101,7 @@ func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	return renderer
 }
 
+//calls playerDraw for each and every team member of the team which is called
 func (t *team) draw(renderer *sdl.Renderer) {
 	playerDraw(&t.goalKeeper[0], renderer)
 	for i := range t.defence {
@@ -105,39 +115,40 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update(last_stick []player, last_motion int32) ([]player, int32) {
+//updates position of players depending upon the keyboard input
+func (t *team) update(lastStick []player, lastMotion int32) ([]player, int32) {
 	keys := sdl.GetKeyboardState()
 	var stick1 = t.goalKeeper[0:1]
 	var stick2 = t.defence[0:2]
 	var stick3 = t.mid[0:5]
 	var stick4 = t.attack[0:3]
 	if keys[sdl.SCANCODE_A] == 1 {
-		last_stick = stick1
+		lastStick = stick1
 	} else if keys[sdl.SCANCODE_S] == 1 {
-		last_stick = stick2
+		lastStick = stick2
 	} else if keys[sdl.SCANCODE_D] == 1 {
-		last_stick = stick3
+		lastStick = stick3
 	} else if keys[sdl.SCANCODE_F] == 1 {
-		last_stick = stick4
+		lastStick = stick4
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
-		last_motion = 1
-		if last_stick[0].y > boundarywidth {
-			for i := range last_stick {
-				if last_stick[i].y > boundarywidth {
-					last_stick[i].y -= playerSpeed
+		lastMotion = 1
+		if lastStick[0].y > boundaryWidth {
+			for i := range lastStick {
+				if lastStick[i].y > boundaryWidth {
+					lastStick[i].y -= playerSpeed
 				}
 			}
 		}
 	} else if keys[sdl.SCANCODE_DOWN] == 1 {
-		last_motion = -1
-		if last_stick[len(last_stick)-1].y < boxHeight-boundarywidth-playerHeight-1 {
-			for i := range last_stick {
-				if last_stick[i].y < boxHeight-playerHeight-boundarywidth-1 {
-					last_stick[i].y += playerSpeed
+		lastMotion = -1
+		if lastStick[len(lastStick)-1].y < boxHeight-boundaryWidth-playerHeight-1 {
+			for i := range lastStick {
+				if lastStick[i].y < boxHeight-playerHeight-boundaryWidth-1 {
+					lastStick[i].y += playerSpeed
 				}
 			}
 		}
 	}
-	return last_stick, last_motion
+	return lastStick, lastMotion
 }

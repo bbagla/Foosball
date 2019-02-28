@@ -8,20 +8,28 @@ import (
 
 //BallSpeedX : Speed of ball in X-direcrion
 //BallSpeedY : Speed of ball in Y-direcrion
+//radius     : radius of ball
 const (
 	radius     = 8
 	BallSpeedX = 1.5
 	BallSpeedY = 0.5
 )
 
+//flag for checking if ball is in the goal or not
+//insideGoal : false means ball in not inside the goal
 var insideGoal = false
 
+//circle struct is inherited
+//ball has its texture
+//xv  : pixels moved by ball in one frame in X-direction
+//yv  : pixels moved by ball in one frame in Y-direction
 type ball struct {
 	circle
 	tex    *sdl.Texture
 	xv, yv float64
 }
 
+//function for drawing the ball
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(ball.tex,
 		&sdl.Rect{0, 0, 2 * radius, 2 * radius},
@@ -29,8 +37,8 @@ func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	return renderer
 }
 
+//it imports a texture to the ball and defines it initial coordinates
 func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
-
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
 	BallImg, err := img.Load("Ball.png")
@@ -44,7 +52,6 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 		fmt.Println(err)
 		return ball{}, fmt.Errorf("%v", err)
 	}
-
 	bal.x = float64(x)
 	bal.y = float64(y)
 	bal.radius = radius
@@ -53,28 +60,25 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 	return bal, nil
 }
 
+//update function for ball
 func (ball *ball) update() {
-
 	goalId, index := ball.collidesWall()
 	if index != -1 {
 		onCollisionWithWall(ball, index)
 	}
-
-	//fmt.Println(insideGoal)
 	if insideGoal == true {
 		ball.movementInsidePost()
 		if ball.x+radius < 0 || ball.x > boxWidth-1+radius {
 			ball.reset(goalId)
-			fmt.Println("GoalId is: ", goalId)
 			insideGoal = false
 			gameStatus.Score[goalId-1]++
-			fmt.Println(gameStatus.Score[0], ":", gameStatus.Score[1])
 		}
 	}
 	ball.x += ball.xv
 	ball.y += ball.yv
 }
 
+//when goal is scored this function restores the initial position of the ball
 func (ball *ball) reset(goal int) {
 	if goal == 1 || goal == 2 {
 		sdl.Delay(2000)

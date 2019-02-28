@@ -57,7 +57,7 @@ func onCollisionwithPlayer(ball *ball, teamid int32) {
 		ball.xv *= 2
 		ball.yv *= 2
 	}
-	ball.yv += float64(last_motion) * 0.2
+	ball.yv += float64(lastMotion) * 0.2
 }
 
 func (c1 *ball) collidesWall() (goal int, index int) {
@@ -66,23 +66,23 @@ func (c1 *ball) collidesWall() (goal int, index int) {
 	// 2 right wall
 	// 3 upper wall
 	// 4 means lower wall
-	if c1.x < boundarywidth+radius && c1.xv < 0 {
+	if c1.x < boundaryWidth+radius && c1.xv < 0 {
 		if c1.y <= 297-radius && c1.y >= 201+radius {
 			insideGoal = true
 			return 2, -1
 		} else {
 			return 0, 1
 		}
-	} else if c1.x > boxWidth-boundarywidth-radius-1 && c1.xv > 0 {
+	} else if c1.x > boxWidth-boundaryWidth-radius-1 && c1.xv > 0 {
 		if c1.y <= 297-radius && c1.y >= 201+radius {
 			insideGoal = true
 			return 1, -1
 		} else {
 			return 0, 2
 		}
-	} else if c1.y < boundarywidth+radius && c1.yv < 0 {
+	} else if c1.y < boundaryWidth+radius && c1.yv < 0 {
 		return 0, 3
-	} else if c1.y > boxHeight-boundarywidth-radius-1 && c1.yv > 0 {
+	} else if c1.y > boxHeight-boundaryWidth-radius-1 && c1.yv > 0 {
 		return 0, 4
 	}
 	return 0, -1

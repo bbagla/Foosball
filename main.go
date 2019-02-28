@@ -16,7 +16,7 @@ var gameStatus = GameStatus{
 	Score: make([]int, 2),
 }
 
-var last_motion int32
+var lastMotion int32
 
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
@@ -61,8 +61,8 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	var last_stick = team1.mid[0:5]
-	last_motion = 0
+	var lastStick = team1.mid[0:5]
+	lastMotion = 0
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -71,7 +71,6 @@ func main() {
 			}
 		}
 		renderer.Copy(tableTex, nil, nil)
-
 		team1.draw(renderer)
 		team2.draw(renderer)
 		ball.draw(renderer)
@@ -79,8 +78,9 @@ func main() {
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)
 		ball.update()
-		last_stick, last_motion = team1.update(last_stick, 0)
-		renderer.Copy(scoreUpdate(renderer), nil,
+		lastStick, lastMotion = team1.update(lastStick, 0)
+		renderer.Copy(scoreUpdate(renderer),
+			nil,
 			&sdl.Rect{120, 0, 400, 25})
 		renderer.Present()
 		sdl.Delay(16)
