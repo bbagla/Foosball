@@ -105,7 +105,7 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update(last_stick []player) []player {
+func (t *team) update(last_stick []player, last_motion int32) ([]player, int32) {
 	keys := sdl.GetKeyboardState()
 	var stick1 = t.goalKeeper[0:1]
 	var stick2 = t.defence[0:2]
@@ -121,6 +121,7 @@ func (t *team) update(last_stick []player) []player {
 		last_stick = stick4
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
+		last_motion = 1
 		if last_stick[0].y > boundarywidth {
 			for i := range last_stick {
 				if last_stick[i].y > boundarywidth {
@@ -129,6 +130,7 @@ func (t *team) update(last_stick []player) []player {
 			}
 		}
 	} else if keys[sdl.SCANCODE_DOWN] == 1 {
+		last_motion = -1
 		if last_stick[len(last_stick)-1].y < boxHeight-boundarywidth-playerHeight-1 {
 			for i := range last_stick {
 				if last_stick[i].y < boxHeight-playerHeight-boundarywidth-1 {
@@ -137,5 +139,5 @@ func (t *team) update(last_stick []player) []player {
 			}
 		}
 	}
-	return last_stick
+	return last_stick, last_motion
 }
