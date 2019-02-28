@@ -15,6 +15,8 @@ var gameStatus = GameStatus{
 	Score: make([]int, 2),
 }
 
+var last_motion int32
+
 func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println(err)
@@ -53,7 +55,7 @@ func main() {
 		return
 	}
 	var last_stick = team1.mid[0:5]
-
+	last_motion = 0
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -62,12 +64,15 @@ func main() {
 			}
 		}
 		renderer.Copy(tableTex, nil, nil)
+
 		team1.draw(renderer)
 		team2.draw(renderer)
 		ball.draw(renderer)
 		ball.update()
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)
+		ball.update()
+		last_stick, last_motion = team1.update(last_stick, 0)
 		if insideGoal == true {
 			ball.movementInsidePost()
 		}

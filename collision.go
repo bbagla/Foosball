@@ -24,8 +24,8 @@ func (ball *ball) nearestObstacle() int {
 	}
 }
 
-func (c1 *circle) collides(c2 player) bool {
-	distance := math.Sqrt(math.Pow(c2.x-c1.x+radius, 2) + math.Pow(c2.y-c1.y+radius, 2))
+func (c1 *ball) collides(c2 player) bool {
+	distance := math.Sqrt(math.Pow(c2.x-c1.x+c2.radius, 2) + math.Pow(c2.y-c1.y+c2.radius, 2))
 	return distance <= c1.radius+c2.radius
 }
 
@@ -54,9 +54,10 @@ func onCollisionwithPlayer(ball *ball, teamid int32) {
 		ball.xv = -ball.xv
 	}
 	if math.Abs(ball.xv) <= BallSpeedX {
-		ball.xv *= 1.5
-		ball.yv *= 1.5
+		ball.xv *= 2
+		ball.yv *= 2
 	}
+	ball.yv += float64(last_motion) * 1 / 10
 }
 
 func (c1 *ball) collidesWall() (goal int, index int) {
@@ -94,9 +95,10 @@ func onCollisionWithWall(ball *ball, index int) {
 		ball.yv = -ball.yv
 	}
 	if ball.xv > BallSpeedX {
-		ball.xv /= 1.5
-		ball.yv /= 1.5
+		ball.xv /= 2
+		ball.yv /= 2
 	}
+	ball.yv -= float64(last_motion) * 1 / 10
 }
 
 func (bal *ball) movementInsidePost() {
