@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 type circle struct {
@@ -18,7 +19,13 @@ var gameStatus = GameStatus{
 var last_motion int32
 
 func main() {
-	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+	err := sdl.Init(sdl.INIT_EVERYTHING)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = ttf.Init()
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -73,6 +80,8 @@ func main() {
 		ball.CheckCollision(team2, 2)
 		ball.update()
 		last_stick, last_motion = team1.update(last_stick, 0)
+		renderer.Copy(scoreUpdate(renderer), nil,
+			&sdl.Rect{120, 0, 400, 25})
 		renderer.Present()
 		sdl.Delay(16)
 	}

@@ -10,8 +10,8 @@ import (
 //BallSpeedY : Speed of ball in Y-direcrion
 const (
 	radius     = 8
-	BallSpeedX = 3
-	BallSpeedY = 1
+	BallSpeedX = 1.5
+	BallSpeedY = 0.5
 )
 
 var insideGoal = false
