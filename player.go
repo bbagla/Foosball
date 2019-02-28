@@ -11,7 +11,7 @@ const (
 	playerSpeed   = 5
 	playerWidth   = 26
 	playerHeight  = 30
-	boundarywidth = 29
+	boundaryWidth = 29
 )
 
 type team struct {
@@ -105,39 +105,39 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update(last_stick []player, last_motion int32) ([]player, int32) {
+func (t *team) update(lastStick []player, lastMotion int32) ([]player, int32) {
 	keys := sdl.GetKeyboardState()
 	var stick1 = t.goalKeeper[0:1]
 	var stick2 = t.defence[0:2]
 	var stick3 = t.mid[0:5]
 	var stick4 = t.attack[0:3]
 	if keys[sdl.SCANCODE_A] == 1 {
-		last_stick = stick1
+		lastStick = stick1
 	} else if keys[sdl.SCANCODE_S] == 1 {
-		last_stick = stick2
+		lastStick = stick2
 	} else if keys[sdl.SCANCODE_D] == 1 {
-		last_stick = stick3
+		lastStick = stick3
 	} else if keys[sdl.SCANCODE_F] == 1 {
-		last_stick = stick4
+		lastStick = stick4
 	}
 	if keys[sdl.SCANCODE_UP] == 1 {
-		last_motion = 1
-		if last_stick[0].y > boundarywidth {
-			for i := range last_stick {
-				if last_stick[i].y > boundarywidth {
-					last_stick[i].y -= playerSpeed
+		lastMotion = 1
+		if lastStick[0].y > boundaryWidth {
+			for i := range lastStick {
+				if lastStick[i].y > boundaryWidth {
+					lastStick[i].y -= playerSpeed
 				}
 			}
 		}
 	} else if keys[sdl.SCANCODE_DOWN] == 1 {
-		last_motion = -1
-		if last_stick[len(last_stick)-1].y < boxHeight-boundarywidth-playerHeight-1 {
-			for i := range last_stick {
-				if last_stick[i].y < boxHeight-playerHeight-boundarywidth-1 {
-					last_stick[i].y += playerSpeed
+		lastMotion = -1
+		if lastStick[len(lastStick)-1].y < boxHeight-boundaryWidth-playerHeight-1 {
+			for i := range lastStick {
+				if lastStick[i].y < boxHeight-playerHeight-boundaryWidth-1 {
+					lastStick[i].y += playerSpeed
 				}
 			}
 		}
 	}
-	return last_stick, last_motion
+	return lastStick, lastMotion
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/veandco/go-sdl2/ttf"
 )
 
+//circle is a struct containing centre co-ordinates of a circle and radius.
 type circle struct {
 	x, y, radius float64
 }
@@ -16,7 +17,9 @@ var gameStatus = GameStatus{
 	Score: make([]int, 2),
 }
 
-var last_motion int32
+//last_motion is a variable indicating the key that was pressed last(up/down)
+//It is updated at each frame of the application.
+var lastMotion int32
 
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
@@ -29,23 +32,24 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	//sdl.CreateWindow creates a window for running the application.
 	window, err := sdl.CreateWindow("sdl2", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, int32(boxWidth), int32(boxHeight), sdl.WINDOW_OPENGL)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer window.Destroy()
+	//sdl.CreateRenderer creates a renderer for drawing on the window.
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer renderer.Destroy()
-
+	//tableTex is the variable containing the texture for the background(foosball table).
 	var tableTex *sdl.Texture
 	tableTex = drawBackground(tableTex, renderer)
 	defer tableTex.Destroy()
-
 	team1, err := newteam(renderer, 1)
 	if err != nil {
 		fmt.Println(err)
@@ -61,8 +65,8 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	var last_stick = team1.mid[0:5]
-	last_motion = 0
+	var lastStick = team1.mid[0:5]
+	lastMotion = 0
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -79,7 +83,7 @@ func main() {
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)
 		ball.update()
-		last_stick, last_motion = team1.update(last_stick, 0)
+		lastStick, lastMotion = team1.update(lastStick, 0)
 		renderer.Copy(scoreUpdate(renderer), nil,
 			&sdl.Rect{120, 0, 400, 25})
 		renderer.Present()
