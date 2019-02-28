@@ -13,3 +13,11 @@ type GameStatus struct {
 	Ball  Position
 	Score []int
 }
+
+//KeyboardInput : struct representing keyboard input.
+//This will be sent to the server in json format
+type KeyboardInput struct {
+	teamID     bool  //team1/team2
+	lastStick  uint8 //A/S/D/F
+	keyPressed bool  //up/down
+}
