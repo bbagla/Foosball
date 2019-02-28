@@ -54,18 +54,25 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 }
 
 func (ball *ball) update() {
+
 	goalId, index := ball.collidesWall()
 	if index != -1 {
 		onCollisionWithWall(ball, index)
 	}
+
+	//fmt.Println(insideGoal)
+	if insideGoal == true {
+		ball.movementInsidePost()
+		if ball.x+radius < 0 || ball.x > boxWidth-1+radius {
+			ball.reset(goalId)
+			fmt.Println("GoalId is: ", goalId)
+			insideGoal = false
+			gameStatus.Score[goalId-1]++
+			fmt.Println(gameStatus.Score[0], ":", gameStatus.Score[1])
+		}
+	}
 	ball.x += ball.xv
 	ball.y += ball.yv
-	if insideGoal == true && (ball.x+2*radius < 0 || ball.x > boxWidth-1+2*radius) {
-		ball.reset(goalId)
-		insideGoal = false
-		gameStatus.Score[goalId-1]++
-		fmt.Println(gameStatus.Score[0], ":", gameStatus.Score[1])
-	}
 }
 
 func (ball *ball) reset(goal int) {
