@@ -59,6 +59,7 @@ func setTeam(t *team, teamID int32, renderer *sdl.Renderer) {
 	}
 }
 
+
 //Returns a Texture for the ball image.
 func setBallImage(renderer *sdl.Renderer) *sdl.Texture {
 
