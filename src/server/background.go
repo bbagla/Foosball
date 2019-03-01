@@ -5,11 +5,6 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// const (
-// 	boxWidth  = 648
-// 	boxHeight = 498
-// )
-
 func drawBackground(tableTex *sdl.Texture, renderer *sdl.Renderer) *sdl.Texture {
 	backImg, err := sdl.LoadBMP("table.bmp")
 	if err != nil {
