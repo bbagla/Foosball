@@ -57,6 +57,6 @@ go get -v github.com/veandco/go-sdl2/{sdl,img}
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License - see the [LICENSE.md](LICENSE.md) file for details
 
 
