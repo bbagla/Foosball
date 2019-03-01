@@ -110,5 +110,8 @@ func gameLoop() {
 		gameStatus.Teams[0].update()
 		gameStatus.Teams[1].update()
 		sendGameStatus()
+		if gameStatus.Score[0] == 5 || gameStatus.Score[1] == 5 {
+			resetGame()
+		}
 	}
 }
