@@ -6,9 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
 	"net/http"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -17,7 +15,6 @@ var (
 	socketLogErr = log.New(os.Stderr, "ERROR [socket] ", log.Ldate|log.Ltime)
 
 	clients = make(map[*websocket.Conn]bool)
-	// broadcast = make(chan GameStatus)
 	keyboardInput KeyboardInput
 
 	upgrader = websocket.Upgrader{
@@ -27,10 +24,6 @@ var (
 	}
 )
 
-// const (
-// 	socketPath = "/socket/"
-// 	host       = ":800"
-// )
 
 func handleConnections(response http.ResponseWriter, request *http.Request) {
 
@@ -64,11 +57,8 @@ func handleConnections(response http.ResponseWriter, request *http.Request) {
 	)
 
 	clients[ws] = true
-	// channel--
 
 	for {
-		//TODO: recieve input here and handle it
-
 		err := ws.ReadJSON(&keyboardInput)
 		if err != nil {
 			socketLogErr.Printf("read error: %v", err)
@@ -76,8 +66,6 @@ func handleConnections(response http.ResponseWriter, request *http.Request) {
 			delete(clients, ws)
 			return
 		}
-		// socketLogStd.Println("recieved input ", keyboardInput)
-
 		if keyboardInput.KeyPressed == 3 {
 			startGame()
 			continue
@@ -85,8 +73,6 @@ func handleConnections(response http.ResponseWriter, request *http.Request) {
 		//else reset game
 
 		if channel != -1 {
-			// socketLogStd.Printf("Received %+v\n", msg)
-			// keys := sdl.GetKeyboardState()
 			var stick1 = gameStatus.Teams[channel].GoalKeeper[0:1]
 			var stick2 = gameStatus.Teams[channel].Defence[0:2]
 			var stick3 = gameStatus.Teams[channel].Mid[0:5]
@@ -107,7 +93,6 @@ func handleConnections(response http.ResponseWriter, request *http.Request) {
 func sendGameStatus() {
 	// Send current game status out to every client that is currently connected
 	for client := range clients {
-		// socketLogStd.Println("sending message", gameStatus)
 		err := client.WriteJSON(gameStatus)
 		if err != nil {
 			socketLogErr.Printf("write error: %v", err)
