@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"time"
-
 	"github.com/gorilla/websocket"
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -18,7 +17,6 @@ import (
 var server = "localhost:80"
 
 var keyboardInput = KeyboardInput{
-	// teamID:     0,
 	SelectStick: 0,
 	KeyPressed:  0,
 }
@@ -26,9 +24,6 @@ var gameStatus = GameStatus{
 	Teams: make([]team, 2),
 	Ball:  ball{},
 	Score: make([]int, 2),
-	// LastStick:  make([]player, 4),
-	// LastMotion: 0,
-	// Renderer:   nil,
 }
 
 func setPlayerImage(renderer *sdl.Renderer, teamID int32) *sdl.Texture {
@@ -141,7 +136,7 @@ func main() {
 		tableTex = drawBackground(tableTex, Renderer)
 		defer tableTex.Destroy()
 		Renderer.Present()
-
+		//Initiate teams
 		setTeam(&gameStatus.Teams[0], 1, Renderer)
 		setTeam(&gameStatus.Teams[1], 2, Renderer)
 		gameStatus.Ball.Tex = setBallImage(Renderer)
@@ -152,27 +147,22 @@ func main() {
 				log.Println("Read Error: ", err)
 				break
 			}
-
-			// log.Println("Recieved :  ", gameStatus.Ball.X, gameStatus.Ball.Y)
-			//RENDER STUFF HERE
 			Renderer.Copy(tableTex, nil, nil)
 			Renderer.Present()
 			gameStatus.Ball.draw(Renderer)
 			gameStatus.Teams[0].draw(Renderer)
 			gameStatus.Teams[1].draw(Renderer)
-			//Renderer=gameStatus.Renderer
 			Renderer.Present()
 
 			for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 				switch t := event.(type) {
 				case *sdl.QuitEvent:
 					return
-
+				//Check which key is pressed and update keyboard input
 				case *sdl.KeyboardEvent:
 					{
 						switch t.Keysym.Sym {
 						case sdl.K_a:
-							fmt.Println("selected a")
 							keyboardInput.SelectStick = 1
 						case sdl.K_s:
 							keyboardInput.SelectStick = 2
@@ -187,38 +177,9 @@ func main() {
 							keyboardInput.KeyPressed = 2
 						}
 					}
-					// fmt.Println("selected Down")
-					// case *sdl.KEYUP:
-					// 	fmt.Println("selected Up")
 				}
 
 			}
-			//READ KEYBOARD INPUT
-			// keys := sdl.GetKeyboardState()
-			// fmt.Println("got keys")
-			// if keys[sdl.SCANCODE_A] == 1 {
-			// 	fmt.Println("selected A")
-			// 	keyboardInput.SelectStick = 1
-			// } else if keys[sdl.SCANCODE_S] == 1 {
-			// 	fmt.Println("selected S")
-			// 	keyboardInput.SelectStick = 2
-			// } else if keys[sdl.SCANCODE_D] == 1 {
-			// 	fmt.Println("selected D")
-			// 	keyboardInput.SelectStick = 3
-			// } else if keys[sdl.SCANCODE_F] == 1 {
-			// 	fmt.Println("selected F")
-			// 	keyboardInput.SelectStick = 4
-			// }
-
-			// if keys[sdl.SCANCODE_UP] == 1 {
-			// 	keyboardInput.KeyPressed = 1
-			// } else if keys[sdl.SCANCODE_DOWN] == 1 {
-			// 	keyboardInput.KeyPressed = 2
-			// } else if keys[sdl.SCANCODE_SPACE] == 1 {
-			// 	keyboardInput.KeyPressed = 3
-			// }
-
-			// log.Println("Sending: input", keyboardInput)
 			err = conn.WriteJSON(keyboardInput)
 			keyboardInput.KeyPressed = 0
 			if err != nil {
@@ -231,8 +192,7 @@ func main() {
 
 	for {
 		select {
-		// Block until interrupted. Then send the close message to the server and wait for our other read/write Goroutine
-		// to signal 'done'
+		// Block until interrupted. Then send the close message to the server and wait for our other read/write Goroutine to signal 'done'
 		case <-interrupt:
 			log.Println("Client interrupted.")
 			err = conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
