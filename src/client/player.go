@@ -15,18 +15,6 @@ const (
 	boundarywidth = 29
 )
 
-// type team struct {
-// 	goalKeeper [1]player
-// 	defence    [2]player
-// 	mid        [5]player
-// 	attack     [3]player
-// }
-
-// type player struct {
-// 	circle
-// 	tex *sdl.Texture
-// }
-
 func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	offset := int32(0)
 	if teamid == 2 {
@@ -88,8 +76,8 @@ func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error)
 
 func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(p.Tex,
-		&sdl.Rect{0, 0, playerWidth, playerHeight},
-		&sdl.Rect{int32(p.X), int32(p.Y), playerWidth, playerHeight})
+		&sdl.Rect{X: 0,Y: 0,W: playerWidth,H: playerHeight},
+		&sdl.Rect{X: int32(p.X),Y: int32(p.Y),W: playerWidth,H: playerHeight})
 	return renderer
 }
 
@@ -106,39 +94,3 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update(last_stick []player, last_motion int32) ([]player, int32) {
-	keys := sdl.GetKeyboardState()
-	var stick1 = t.GoalKeeper[0:1]
-	var stick2 = t.Defence[0:2]
-	var stick3 = t.Mid[0:5]
-	var stick4 = t.Attack[0:3]
-	if keys[sdl.SCANCODE_A] == 1 {
-		last_stick = stick1
-	} else if keys[sdl.SCANCODE_S] == 1 {
-		last_stick = stick2
-	} else if keys[sdl.SCANCODE_D] == 1 {
-		last_stick = stick3
-	} else if keys[sdl.SCANCODE_F] == 1 {
-		last_stick = stick4
-	}
-	if keys[sdl.SCANCODE_UP] == 1 {
-		last_motion = 1
-		if last_stick[0].Y > boundarywidth {
-			for i := range last_stick {
-				if last_stick[i].Y > boundarywidth {
-					last_stick[i].Y -= playerSpeed
-				}
-			}
-		}
-	} else if keys[sdl.SCANCODE_DOWN] == 1 {
-		last_motion = -1
-		if last_stick[len(last_stick)-1].Y < boxHeight-boundarywidth-playerHeight-1 {
-			for i := range last_stick {
-				if last_stick[i].Y < boxHeight-playerHeight-boundarywidth-1 {
-					last_stick[i].Y += playerSpeed
-				}
-			}
-		}
-	}
-	return last_stick, last_motion
-}
