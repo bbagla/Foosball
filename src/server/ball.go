@@ -2,31 +2,16 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-//BallSpeedX : Speed of ball in X-direcrion
-//BallSpeedY : Speed of ball in Y-direcrion
-// const (
-// 	radius     = 8
-// 	BallSpeedX = 3
-// 	BallSpeedY = 1
-// )
-
 var insideGoal = false
-
-// type ball struct {
-// 	circle
-// 	tex    *sdl.Texture
-// 	xv, yv float64
-// }
 
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(ball.Tex,
-		&sdl.Rect{0, 0, 2 * radius, 2 * radius},
-		&sdl.Rect{int32(ball.X - radius), int32(ball.Y - radius), 2 * radius, 2 * radius})
+		&sdl.Rect{X:0,Y: 0,W: 2 * radius,H: 2 * radius},
+		&sdl.Rect{X: int32(ball.X - radius),Y: int32(ball.Y - radius),W: 2 * radius,H: 2 * radius})
 	return renderer
 }
 
@@ -56,19 +41,17 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 
 func (ball *ball) update() {
 
-	goalId, index := ball.collidesWall()
+	goalID, index := ball.collidesWall()
 	if index != -1 {
 		onCollisionWithWall(ball, index)
 	}
-
-	//fmt.Println(insideGoal)
 	if insideGoal == true {
 		ball.movementInsidePost()
 		if ball.X+radius < 0 || ball.X > boxWidth-1+radius {
-			ball.reset(goalId)
-			fmt.Println("GoalId is: ", goalId)
+			ball.reset(goalID)
+			fmt.Println("GoalID is: ", goalID)
 			insideGoal = false
-			gameStatus.Score[goalId-1]++
+			gameStatus.Score[goalID-1]++
 			fmt.Println(gameStatus.Score[0], ":", gameStatus.Score[1])
 		}
 	}
