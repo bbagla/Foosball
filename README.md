@@ -25,13 +25,13 @@ and the client using
 
 ### Prerequisites
 
-* gorilla/websockets
+* gorilla/websocket
 * veandco/go-sdl2
 
 Install using
 
 ```
-go get github.com/gorilla/websockets
+go get github.com/gorilla/websocket
 ```
 And
 
