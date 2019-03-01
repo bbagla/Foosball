@@ -9,6 +9,8 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+//BallSpeedX : Speed of ball in X-direcrion
+//BallSpeedY : Speed of ball in Y-direcrion
 const (
 	boxWidth  = 648
 	boxHeight = 498
@@ -34,8 +36,6 @@ var (
 		Renderer: nil,
 	}
 	ticking = false
-
-	// team1, team2 team
 )
 
 func resetGame() {
@@ -89,8 +89,6 @@ func prepareGame() {
 
 }
 
-//func checkPoint()
-
 func startGame() {
 	if !ticking {
 		ticking = true
@@ -106,20 +104,11 @@ func gameLoop() {
 		if !ticking {
 			return
 		}
-		//Renderer.Copy(tableTex, nil, nil)
-		// //gameStatus.Ball.update()
 		gameStatus.Ball.CheckCollision(gameStatus.Teams[0], 1)
 		gameStatus.Ball.CheckCollision(gameStatus.Teams[1], 2)
 		gameStatus.Ball.update()
 		gameStatus.Teams[0].update()
 		gameStatus.Teams[1].update()
-		//handle team 1
-
-		// if checkPoint() {
-		// 	prepareGame()
-		// 	return
-		// }
-
 		sendGameStatus()
 	}
 }
