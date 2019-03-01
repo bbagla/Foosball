@@ -42,6 +42,7 @@ type ball struct {
 	Xv, Yv float64
 }
 
+//Circle : struct representing center co-ordinates and the radius
 type Circle struct {
 	X, Y, Radius float64
 }
