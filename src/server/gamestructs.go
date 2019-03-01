@@ -3,14 +3,11 @@ package main
 import "github.com/veandco/go-sdl2/sdl"
 
 
-//GameStatus : struct representing status of the game at any
-//given instant. This will be communicated in json format
+//GameStatus : struct representing status of the game at any given instant. This will be communicated in json format
 type GameStatus struct {
 	Teams      []team        `json:"player"`
 	Ball       ball          `json:"ball"`
 	Score      []int         `json:"score"`
-	// LastMotion int32         `json:"lastmotion"`
-	// LastStick  []player      `json:"laststick"`
 	Renderer   *sdl.Renderer `json:"renderer"`
 }
 
@@ -41,7 +38,7 @@ type ball struct {
 	Tex    *sdl.Texture
 	Xv, Yv float64
 }
-
+//Circle : struct representing center co-ordinates and the radius
 type Circle struct {
 	X, Y, Radius float64
 }
