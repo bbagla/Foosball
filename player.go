@@ -119,7 +119,7 @@ func (t *team) draw(renderer *sdl.Renderer) {
 }
 
 //updates position of players depending upon the keyboard input
-func (t *team) update() /*[]player, int32*/ {
+func (t *team) update() {
 	keys := sdl.GetKeyboardState()
 	t.lastMotion = 0
 	var stick1 = t.goalKeeper[0:1]
@@ -154,5 +154,4 @@ func (t *team) update() /*[]player, int32*/ {
 			}
 		}
 	}
-	//return t.lastStick, t.lastMotion
 }

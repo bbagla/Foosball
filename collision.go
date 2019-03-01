@@ -6,21 +6,21 @@ import (
 )
 
 //nearestObstacle() returns a integer corresponding to the stick that is nearest to the ball at that moment.
-func (ball *ball) nearestObstacle() int {
+func (ball *ball) nearestObstacle(c1 chan int) {
 	distance := [8]int32{61, 136, 211, 286, 361, 436, 511, 586}
 
 	i := sort.Search(len(distance), func(i int) bool { return distance[i] >= int32(ball.x) })
 	if i < len(distance) && distance[i] == int32(ball.x) {
-		return i
+		c1 <- i
 	} else if i == 0 {
-		return i
+		c1 <- i
 	} else if i == 8 {
-		return i - 1
+		c1 <- i - 1
 	} else {
 		if math.Abs(float64(distance[i]-int32(ball.x))) < math.Abs(float64(distance[i-1]-int32(ball.x))) {
-			return i
+			c1 <- i
 		} else {
-			return i - 1
+			c1 <- i
 		}
 	}
 }
@@ -34,22 +34,27 @@ func (c1 *ball) collides(c2 player) bool {
 //CheckCollision() checks at every frame if a collision has happened with a player or not.
 //If a collision has happened, it invokes onCollisionwithPlayer().
 func (ball *ball) CheckCollision(t team, teamid int32) {
-	index := ball.nearestObstacle()
+	c1 := make(chan int)
+	go ball.nearestObstacle(c1)
 	arr := [2][]int{{0, 1, 3, 5}, {7, 6, 4, 2}}
 	var stick [4][]player
 	stick[0] = t.goalKeeper[0:1]
 	stick[1] = t.defence[0:2]
 	stick[2] = t.mid[0:5]
 	stick[3] = t.attack[0:3]
+	index := <-c1
 	for i, j := range arr[teamid-1] {
 		if j == index {
 			for k := range stick[i] {
-				if ball.collides(stick[i][k]) {
-					onCollisionwithPlayer(ball, teamid, t.lastMotion)
-					break
-				}
+				go ball.collision(t, teamid, stick[i][k])
 			}
 		}
+	}
+}
+
+func (ball *ball) collision(t team, teamid int32, p player) {
+	if ball.collides(p) {
+		onCollisionwithPlayer(ball, teamid, t.lastMotion)
 	}
 }
 
