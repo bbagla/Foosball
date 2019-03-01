@@ -108,7 +108,7 @@ func onCollisionWithWall(ball *ball, index int) {
 	} else if index == 3 || index == 4 {
 		ball.yv = -ball.yv
 	}
-	if ball.xv > BallSpeedX {
+	if math.Abs(ball.xv) > BallSpeedX {
 		ball.xv /= 2
 		ball.yv = BallSpeedY * (ball.yv / math.Abs(ball.yv))
 	}

@@ -77,10 +77,10 @@ func main() {
 			}
 		}
 		renderer.Copy(tableTex, nil, nil)
-
+		ball.draw(renderer)
 		team1.draw(renderer)
 		team2.draw(renderer)
-		ball.draw(renderer)
+
 		ball.update()
 		ball.CheckCollision(team1, 1)
 		ball.CheckCollision(team2, 2)

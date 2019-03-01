@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+//updates scores on the top bar using sdl_ttf binding
 func scoreUpdate(renderer *sdl.Renderer) *sdl.Texture {
 	font, err := ttf.OpenFont("ZCOOLQingKeHuangYou-Regular.ttf", 32)
 	if err != nil {
