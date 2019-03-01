@@ -5,8 +5,8 @@ import (
 	"sort"
 )
 
-//nearestObstacle() returns a integer corresponding to the stick that is nearest to the ball at that moment.
-func (ball *ball) nearestObstacle(c1 chan int) {
+//NearestObstacle() returns a integer corresponding to the stick that is nearest to the ball at that moment.
+func (ball *ball) NearestObstacle(c1 chan int) {
 	distance := [8]int32{61, 136, 211, 286, 361, 436, 511, 586}
 
 	i := sort.Search(len(distance), func(i int) bool { return distance[i] >= int32(ball.X) })
@@ -25,8 +25,8 @@ func (ball *ball) nearestObstacle(c1 chan int) {
 	}
 }
 
-//collides() returns true if the ball collides with a player.
-func (ball *ball) collides(c2 player) bool {
+//Collides() returns true if the ball Collides with a player.
+func (ball *ball) Collides(c2 player) bool {
 	distance := math.Sqrt(math.Pow(c2.X-ball.X+c2.Radius, 2) + math.Pow(c2.Y-ball.Y+c2.Radius, 2))
 	return distance <= ball.Radius+c2.Radius
 }
@@ -35,7 +35,7 @@ func (ball *ball) collides(c2 player) bool {
 //If a collision has happened, it invokes onCollisionwithPlayer().
 func (ball *ball) CheckCollision(t team, teamid int32) {
 	c1 := make(chan int)
-	go ball.nearestObstacle(c1)
+	go ball.NearestObstacle(c1)
 	arr := [2][]int{{0, 1, 3, 5}, {7, 6, 4, 2}}
 	var stick [4][]player
 	stick[0] = t.GoalKeeper[0:1]
@@ -46,21 +46,21 @@ func (ball *ball) CheckCollision(t team, teamid int32) {
 	for i, j := range arr[teamid-1] {
 		if j == index {
 			for k := range stick[i] {
-				go ball.collision(t, teamid, stick[i][k])
+				go ball.Collision(t, teamid, stick[i][k])
 			}
 		}
 	}
 }
 //   ram    bhfshfduhufher
-func (ball *ball) collision(t team, teamid int32, p player) {
-	if ball.collides(p) {
-		onCollisionwithPlayer(ball, teamid, t.LastMotion)
+func (ball *ball) Collision(t team, teamid int32, p player) {
+	if ball.Collides(p) {
+		OnCollisionwithPlayer(ball, teamid, t.LastMotion)
 	}
 }
 
 //onCollisionwithPlayer changes the direction of the ball.
 //It also changes the speed of the ball if it has not been increased by a collision with another player.
-func onCollisionwithPlayer(ball *ball, teamid int32, lastMotion int32) {
+func OnCollisionwithPlayer(ball *ball, teamid int32, lastMotion int32) {
 	if (ball.Xv < 0 && teamid == 1) || (ball.Xv > 0 && teamid == 2) {
 		ball.Xv = -ball.Xv
 	}
@@ -71,14 +71,14 @@ func onCollisionwithPlayer(ball *ball, teamid int32, lastMotion int32) {
 	ball.Yv += float64(lastMotion) * 0.2
 }
 
-//collidesWall() checks if a collision has happened with a wall or not.
+//CollidesWall() checks if a collision has happened with a wall or not.
 //It also checks and returns if a goal has happened.
 //index -1 means no collision
 // 1 means collision with left wall
 // 2 right wall
 // 3 upper wall
 // 4 means lower wall
-func (ball *ball) collidesWall() (goal int, index int) {
+func (ball *ball) CollidesWall() (goal int, index int) {
 	if ball.X < boundarywidth+radius && ball.Xv < 0 {
 		if ball.Y <= 297-radius && ball.Y >= 201+radius {
 			insideGoal = true
@@ -100,7 +100,7 @@ func (ball *ball) collidesWall() (goal int, index int) {
 }
 
 //onCollisionWithWall() changes the direction and speed of the ball.
-func onCollisionWithWall(ball *ball, index int) {
+func OnCollisionWithWall(ball *ball, index int) {
 	if index == 1 || index == 2 {
 		ball.Xv = -ball.Xv
 	} else if index == 3 || index == 4 {

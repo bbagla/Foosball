@@ -46,9 +46,9 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 //update function for ball
 func (ball *ball) update() {
 
-	goalID, index := ball.collidesWall()
+	goalID, index := ball.CollidesWall()
 	if index != -1 {
-		onCollisionWithWall(ball, index)
+		OnCollisionWithWall(ball, index)
 	}
 	if insideGoal == true {
 		ball.movementInsidePost()
