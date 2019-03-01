@@ -181,6 +181,8 @@ func main() {
 							keyboardInput.KeyPressed = 1
 						case sdl.K_DOWN:
 							keyboardInput.KeyPressed = 2
+						case sdl.K_SPACE:
+							keyboardInput.KeyPressed = 3	
 						}
 					}
 				}
