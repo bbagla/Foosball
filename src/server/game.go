@@ -85,6 +85,7 @@ func PrepareGame() {
 	gameStatus.Teams[1].LastStick = gameStatus.Teams[1].Mid[0:5]
 
 	sendGameStatus()
+	sdl.Delay(10000)
 	startGame()
 }
 
