@@ -29,7 +29,7 @@ type ball struct {
 	xv, yv float64
 }
 
-//function for drawing the ball
+//draw function for drawing the ball
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(ball.tex,
 		&sdl.Rect{0, 0, 2 * radius, 2 * radius},

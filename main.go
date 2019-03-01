@@ -17,9 +17,6 @@ var gameStatus = GameStatus{
 	Score: make([]int, 2),
 }
 
-//last_motion is a variable indicating the key that was pressed last(up/down)
-//It is updated at each frame of the application.
-
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {

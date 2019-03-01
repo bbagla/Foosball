@@ -9,21 +9,26 @@ import (
 
 //BallSpeedX : Speed of ball in X-direcrion
 //BallSpeedY : Speed of ball in Y-direcrion
+//radius     : radius of ball
 const (
 	radius     = 8
-	BallSpeedX = 3
-	BallSpeedY = 1
+	BallSpeedX = 1.5
+	BallSpeedY = 0.5
 )
 
+//flag for checking if ball is in the goal or not
+//insideGoal : false means ball in not inside the goal
 var insideGoal = false
 
+//draw function for drawing the ball
 func (ball *ball) draw(renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(ball.Tex,
-		&sdl.Rect{X: 0,Y: 0,W: 2 * radius,H: 2 * radius},
-		&sdl.Rect{X: int32(ball.X - radius),Y: int32(ball.Y - radius),W: 2 * radius,H: 2 * radius})
+		&sdl.Rect{X: 0, Y: 0, W: 2 * radius, H: 2 * radius},
+		&sdl.Rect{X: int32(ball.X - radius), Y: int32(ball.Y - radius), W: 2 * radius, H: 2 * radius})
 	return renderer
 }
 
+//it imports a texture to the ball and defines it initial coordinates
 func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
@@ -48,6 +53,7 @@ func newBall(renderer *sdl.Renderer, x, y int32) (bal ball, err error) {
 	return bal, nil
 }
 
+//update function for ball
 func (ball *ball) update() {
 
 	goalID, index := ball.collidesWall()
@@ -70,6 +76,7 @@ func (ball *ball) update() {
 	ball.Y += ball.Yv
 }
 
+//when goal is scored this function restores the initial position of the ball
 func (ball *ball) reset(goal int) {
 	if goal == 1 || goal == 2 {
 		sdl.Delay(2000)

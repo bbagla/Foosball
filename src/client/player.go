@@ -15,6 +15,7 @@ const (
 	boundarywidth = 29
 )
 
+//creates a new team and their coordinates are passed into  it manually
 func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	offset := int32(0)
 	if teamid == 2 {
@@ -49,6 +50,7 @@ func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	return t, nil
 }
 
+//imports image and attaches it with the player , coordinates are passed into this function for initialization
 func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error) {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
@@ -74,13 +76,15 @@ func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error)
 	return p, nil
 }
 
+//copies texture from player image to the renderer
 func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(p.Tex,
-		&sdl.Rect{X: 0,Y: 0,W: playerWidth,H: playerHeight},
-		&sdl.Rect{X: int32(p.X),Y: int32(p.Y),W: playerWidth,H: playerHeight})
+		&sdl.Rect{X: 0, Y: 0, W: playerWidth, H: playerHeight},
+		&sdl.Rect{X: int32(p.X), Y: int32(p.Y), W: playerWidth, H: playerHeight})
 	return renderer
 }
 
+//calls playerDraw for each and every team member of the team which is called
 func (t *team) draw(renderer *sdl.Renderer) {
 	playerDraw(&t.GoalKeeper[0], renderer)
 	for i := range t.Defence {
@@ -93,4 +97,3 @@ func (t *team) draw(renderer *sdl.Renderer) {
 		playerDraw(&t.Attack[i], renderer)
 	}
 }
-

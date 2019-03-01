@@ -8,25 +8,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// const (
-// 	playerSpeed   = 5
-// 	playerWidth   = 26
-// 	playerHeight  = 30
-// 	boundarywidth = 29
-// )
-
-// type team struct {
-// 	GoalKeeper [1]player
-// 	defence    [2]player
-// 	mid        [5]player
-// 	attack     [3]player
-// }
-
-// type player struct {
-// 	circle
-// 	tex *sdl.Texture
-// }
-
+//creates a new team and their coordinates are passed into  it manually
 func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	offset := int32(0)
 	if teamid == 2 {
@@ -61,6 +43,7 @@ func newteam(renderer *sdl.Renderer, teamid int32) (t team, err error) {
 	return t, nil
 }
 
+//imports image and attaches it with the player , coordinates are passed into this function for initialization
 func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error) {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
@@ -86,6 +69,7 @@ func newplayer(renderer *sdl.Renderer, x, y, teamid int32) (p player, err error)
 	return p, nil
 }
 
+//copies texture from player image to the renderer
 func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	renderer.Copy(p.Tex,
 		&sdl.Rect{0, 0, playerWidth, playerHeight},
@@ -93,6 +77,7 @@ func playerDraw(p *player, renderer *sdl.Renderer) *sdl.Renderer {
 	return renderer
 }
 
+//calls playerDraw for each and every team member of the team which is called
 func (t *team) draw(renderer *sdl.Renderer) {
 	playerDraw(&t.GoalKeeper[0], renderer)
 	for i := range t.Defence {
@@ -106,7 +91,8 @@ func (t *team) draw(renderer *sdl.Renderer) {
 	}
 }
 
-func (t *team) update() () {
+//updates position of players depending upon the keyboard input
+func (t *team) update() {
 	t.LastMotion = 0
 	if keyboardInput.KeyPressed == 1 {
 		t.LastMotion = 1

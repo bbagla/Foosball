@@ -3,15 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/gorilla/websocket"
+	"github.com/veandco/go-sdl2/img"
+	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 	"log"
 	"net/url"
 	"os"
 	"os/signal"
 	"time"
-	"github.com/gorilla/websocket"
-	"github.com/veandco/go-sdl2/img"
-	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/ttf"
 )
 
 var server = "localhost:80"
@@ -26,6 +26,7 @@ var gameStatus = GameStatus{
 	Score: make([]int, 2),
 }
 
+//Returns a Texture for the player image based on teamId.
 func setPlayerImage(renderer *sdl.Renderer, teamID int32) *sdl.Texture {
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
@@ -44,6 +45,7 @@ func setPlayerImage(renderer *sdl.Renderer, teamID int32) *sdl.Texture {
 	return Tex
 }
 
+//Associates the textures to their corresponding players from GameStatus.
 func setTeam(t *team, teamID int32, renderer *sdl.Renderer) {
 	t.GoalKeeper[0].Tex = setPlayerImage(renderer, teamID)
 	for i := range t.Defence {
@@ -57,6 +59,7 @@ func setTeam(t *team, teamID int32, renderer *sdl.Renderer) {
 	}
 }
 
+//Returns a Texture for the ball image.
 func setBallImage(renderer *sdl.Renderer) *sdl.Texture {
 
 	img.Init(img.INIT_JPG | img.INIT_PNG)
@@ -118,13 +121,14 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-
+		//sdl.CreateWindow creates a window for running the application.
 		window, err := sdl.CreateWindow("sdl2", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, int32(boxWidth), int32(boxHeight), sdl.WINDOW_OPENGL)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		defer window.Destroy()
+		//sdl.CreateRenderer creates a renderer for drawing on the window.
 		Renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 		if err != nil {
 			fmt.Println(err)
@@ -132,6 +136,7 @@ func main() {
 		}
 		defer Renderer.Destroy()
 
+		//tableTex is the variable containing the texture for the background(foosball table).
 		var tableTex *sdl.Texture
 		tableTex = drawBackground(tableTex, Renderer)
 		defer tableTex.Destroy()
@@ -139,6 +144,7 @@ func main() {
 		//Initiate teams
 		setTeam(&gameStatus.Teams[0], 1, Renderer)
 		setTeam(&gameStatus.Teams[1], 2, Renderer)
+		//Associates the  ball to its corresponding ball from GameStatus.
 		gameStatus.Ball.Tex = setBallImage(Renderer)
 		for {
 
