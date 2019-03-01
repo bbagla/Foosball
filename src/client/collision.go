@@ -18,15 +18,15 @@ func (ball *ball) nearestObstacle() int {
 	} else {
 		if math.Abs(float64(distance[i]-int32(ball.X))) < math.Abs(float64(distance[i-1]-int32(ball.X))) {
 			return i
-		} else {
-			return i - 1
 		}
+		return i - 1
+		
 	}
 }
 
-func (c1 *ball) collides(c2 player) bool {
-	distance := math.Sqrt(math.Pow(c2.X-c1.X+c2.Radius, 2) + math.Pow(c2.Y-c1.Y+c2.Radius, 2))
-	return distance <= c1.Radius+c2.Radius
+func (ball *ball) collides(c2 player) bool {
+	distance := math.Sqrt(math.Pow(c2.X-ball.X+c2.Radius, 2) + math.Pow(c2.Y-ball.Y+c2.Radius, 2))
+	return distance <= ball.Radius+c2.Radius
 }
 
 func (ball *ball) CheckCollision(t team, teamid int32) {
@@ -60,29 +60,28 @@ func onCollisionwithPlayer(ball *ball, teamid int32) {
 	// 	ball.Yv += float64(gameStatus.LastMotion) * 0.2
 }
 
-func (c1 *ball) collidesWall() (goal int, index int) {
+func (ball *ball) collidesWall() (goal int, index int) {
 	//index -1 means no collision
 	// 1 means collision with left wall
 	// 2 right wall
 	// 3 upper wall
 	// 4 means lower wall
-	if c1.X < boundarywidth+radius && c1.Xv < 0 {
-		if c1.X <= 297-radius && c1.Y >= 201+radius {
+	if ball.X < boundarywidth+radius && ball.Xv < 0 {
+		if ball.X <= 297-radius && ball.Y >= 201+radius {
 			insideGoal = true
 			return 2, -1
-		} else {
-			return 0, 1
 		}
-	} else if c1.X > boxWidth-boundarywidth-radius-1 && c1.Xv > 0 {
-		if c1.Y <= 297-radius && c1.Y >= 201+radius {
+		return 0, 1
+		
+	} else if ball.X > boxWidth-boundarywidth-radius-1 && ball.Xv > 0 {
+		if ball.Y <= 297-radius && ball.Y >= 201+radius {
 			insideGoal = true
 			return 1, -1
-		} else {
-			return 0, 2
 		}
-	} else if c1.Y < boundarywidth+radius && c1.Yv < 0 {
+		return 0, 2
+	} else if ball.Y < boundarywidth+radius && ball.Yv < 0 {
 		return 0, 3
-	} else if c1.Y > boxHeight-boundarywidth-radius-1 && c1.Yv > 0 {
+	} else if ball.Y > boxHeight-boundarywidth-radius-1 && ball.Yv > 0 {
 		return 0, 4
 	}
 	return 0, -1
@@ -100,6 +99,6 @@ func onCollisionWithWall(ball *ball, index int) {
 	}
 }
 
-func (bal *ball) movementInsidePost() {
-	bal.Yv = 0
+func (ball *ball) movementInsidePost() {
+	ball.Yv = 0
 }
