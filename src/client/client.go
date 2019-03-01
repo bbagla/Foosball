@@ -31,11 +31,11 @@ var gameStatus = GameStatus{
 	// Renderer:   nil,
 }
 
-func setPlayerImage(renderer *sdl.Renderer, teamId int32) *sdl.Texture {
+func setPlayerImage(renderer *sdl.Renderer, teamID int32) *sdl.Texture {
 	img.Init(img.INIT_JPG | img.INIT_PNG)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
 	playerImg, err := img.Load("Player_Red.png")
-	if teamId == 2 {
+	if teamID == 2 {
 		playerImg, err = img.Load("Player_Blue.png")
 	}
 	if err != nil {
@@ -49,16 +49,16 @@ func setPlayerImage(renderer *sdl.Renderer, teamId int32) *sdl.Texture {
 	return Tex
 }
 
-func setTeam(t *team, teamId int32, renderer *sdl.Renderer) {
-	t.GoalKeeper[0].Tex = setPlayerImage(renderer, teamId)
+func setTeam(t *team, teamID int32, renderer *sdl.Renderer) {
+	t.GoalKeeper[0].Tex = setPlayerImage(renderer, teamID)
 	for i := range t.Defence {
-		t.Defence[i].Tex = setPlayerImage(renderer, teamId)
+		t.Defence[i].Tex = setPlayerImage(renderer, teamID)
 	}
 	for i := range t.Mid {
-		t.Mid[i].Tex = setPlayerImage(renderer, teamId)
+		t.Mid[i].Tex = setPlayerImage(renderer, teamID)
 	}
 	for i := range t.Attack {
-		t.Attack[i].Tex = setPlayerImage(renderer, teamId)
+		t.Attack[i].Tex = setPlayerImage(renderer, teamID)
 	}
 }
 
